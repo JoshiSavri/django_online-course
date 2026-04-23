@@ -1,46 +1,26 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Course, Choice, Submission
+from .models import Course, Submission
 
-def course_detail(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)
-    return render(request, 'course/course_details.html', {'course': course})
+def show_exam_result(request, submission_id):
+    submission = get_object_or_404(Submission, pk=submission_id)
+    course = submission.course
 
+    total_questions = course.question_set.count()
+    correct_answers = 0
 
-def submit_exam(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)
-
-    selected_choices = request.POST.getlist('choice')
-    choices = Choice.objects.filter(id__in=selected_choices)
-
-    submission = Submission.objects.create(
-        user=request.user,
-        course=course
-    )
-
-    submission.choices.set(choices)
-
-    return evaluate_exam(request, submission.id)
-
-
-def evaluate_exam(request, submission_id):
-    submission = Submission.objects.get(id=submission_id)
-
-    total = 0
-    correct = 0
-
-    for question in submission.course.question_set.all():
-        total += 1
-
-        selected = submission.choices.filter(question=question)
+    for question in course.question_set.all():
+        selected_choices = submission.choices.filter(question=question)
         correct_choices = question.choice_set.filter(is_correct=True)
 
-        if set(selected) == set(correct_choices):
-            correct += 1
+        if set(selected_choices) == set(correct_choices):
+            correct_answers += 1
 
-    score = (correct / total) * 100 if total > 0 else 0
+    score = correct_answers
+    total = total_questions
 
     return render(request, 'course/exam_result.html', {
+        'course': course,
+        'submission': submission,
         'score': score,
-        'total': total,
-        'correct': correct
+        'total': total
     })
