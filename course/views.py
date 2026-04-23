@@ -3,7 +3,7 @@ from .models import Course, Choice, Submission
 
 def course_detail(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
-    return render(request, 'course/course_details.html', {'course': course})
+    return render(request, 'course/course_details_bootstrap.html', {'course': course})
 
 
 def submit_exam(request, course_id):
@@ -19,28 +19,25 @@ def submit_exam(request, course_id):
 
     submission.choices.set(choices)
 
-    return evaluate_exam(request, submission.id)
+    return show_exam_result(request, submission.id)
 
 
-def evaluate_exam(request, submission_id):
-    submission = Submission.objects.get(id=submission_id)
+def show_exam_result(request, submission_id):
+    submission = get_object_or_404(Submission, pk=submission_id)
+    course = submission.course
 
-    total = 0
-    correct = 0
+    total_questions = course.question_set.count()
+    correct_answers = 0
 
-    for question in submission.course.question_set.all():
-        total += 1
-
+    for question in course.question_set.all():
         selected = submission.choices.filter(question=question)
-        correct_choices = question.choice_set.filter(is_correct=True)
+        correct = question.choice_set.filter(is_correct=True)
 
-        if set(selected) == set(correct_choices):
-            correct += 1
-
-    score = (correct / total) * 100 if total > 0 else 0
+        if set(selected) == set(correct):
+            correct_answers += 1
 
     return render(request, 'course/exam_result.html', {
-        'score': score,
-        'total': total,
-        'correct': correct
+        'course': course,
+        'score': correct_answers,
+        'total': total_questions
     })
