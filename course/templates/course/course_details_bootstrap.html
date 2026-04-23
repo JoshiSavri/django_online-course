@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<<<<<<< HEAD
     <title>Course</title>
+=======
+    <title>Course Details</title>
+>>>>>>> fe9c786a3fb822416ddb4d3dfb3bf7ae22e5f485
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -10,6 +14,7 @@
 
     <h2>{{ course.name }}</h2>
 
+<<<<<<< HEAD
     <form method="POST" action="{% url 'submit_exam' course.id %}">
         {% csrf_token %}
 
@@ -26,8 +31,21 @@
 
         <button class="btn btn-primary mt-3">Submit</button>
     </form>
+=======
+    <div class="list-group mt-3">
+        {% for lesson in course.lesson_set.all %}
+            <div class="list-group-item">
+                {{ lesson.title }}
+            </div>
+        {% endfor %}
+    </div>
+>>>>>>> fe9c786a3fb822416ddb4d3dfb3bf7ae22e5f485
 
 </div>
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> fe9c786a3fb822416ddb4d3dfb3bf7ae22e5f485
