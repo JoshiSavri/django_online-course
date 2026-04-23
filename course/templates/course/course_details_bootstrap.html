@@ -1,51 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-<<<<<<< HEAD
-    <title>Course</title>
-=======
     <title>Course Details</title>
->>>>>>> fe9c786a3fb822416ddb4d3dfb3bf7ae22e5f485
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
-<div class="container mt-4">
+<div class="container mt-5">
 
-    <h2>{{ course.name }}</h2>
+    <!-- Course Name -->
+    <h1 class="mb-4">{{ course.name }}</h1>
 
-<<<<<<< HEAD
-    <form method="POST" action="{% url 'submit_exam' course.id %}">
-        {% csrf_token %}
+    <!-- Lessons List -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            Lessons
+        </div>
 
-        {% for question in course.question_set.all %}
-            <div class="card mt-3 p-3">
-                <h5>{{ question.question_text }}</h5>
+        <ul class="list-group list-group-flush">
 
-                {% for choice in question.choice_set.all %}
-                    <input type="checkbox" name="choice" value="{{ choice.id }}">
-                    {{ choice.choice_text }} <br>
-                {% endfor %}
-            </div>
-        {% endfor %}
+            {% for lesson in course.lesson_set.all %}
+                <li class="list-group-item">
+                    {{ lesson.title }}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">
+                    No lessons available
+                </li>
+            {% endfor %}
 
-        <button class="btn btn-primary mt-3">Submit</button>
-    </form>
-=======
-    <div class="list-group mt-3">
-        {% for lesson in course.lesson_set.all %}
-            <div class="list-group-item">
-                {{ lesson.title }}
-            </div>
-        {% endfor %}
+        </ul>
     </div>
->>>>>>> fe9c786a3fb822416ddb4d3dfb3bf7ae22e5f485
 
 </div>
 
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> fe9c786a3fb822416ddb4d3dfb3bf7ae22e5f485
